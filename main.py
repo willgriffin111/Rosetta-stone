@@ -13,27 +13,41 @@ def learn(data):
         ind = line.split("|")
         cipherDict[ind[0]] = ind[1]
 
-
 def decrypt(data):
+    line = data.readline().strip().split(" ")
     output = []
-    line = data.readlines()[0].strip().split(" ")
-
-
+    collection = ""
     for word in line:
-        if word in cipherDict:
-            output.append(cipherDict[word])
+        if collection:
+            newCollection = collection + " " + word
         else:
-            output.append(word)
-    
+            newCollection = word
+        if newCollection in cipherDict:
+            collection = newCollection
+        else:
+            if collection:
+                output.append(cipherDict[collection])
+                collection = ""
+            if word in cipherDict:
+                output.append(cipherDict[word])
+            else:
+                collection = word            
+    if collection in cipherDict:
+        output.append(cipherDict[collection])
+    else:
+        output.append(collection)
+
     return " ".join(output)
 
 
 
+
+
 print("LEARN")
-learn(open("Rosetta-stone/data/test1.txt","r"))
+learn(open("Rosetta-stone/data/test2.txt","r"))
 print(cipherDict)
 print("DECRYPT")
-print(decrypt(open("Rosetta-stone/data/test1.txt","r")))
+print(decrypt(open("Rosetta-stone/data/test2.txt","r")))
 
 
 
